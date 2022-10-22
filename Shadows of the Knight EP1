@@ -1,0 +1,131 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <map>
+
+using namespace std;
+
+enum Direction
+{
+	U, 
+	UR,
+	R,
+	DR,
+	D,
+	DL,
+	L,
+	UL
+};
+
+/**
+ * Auto-generated code below aims at helping you parse
+ * the standard input according to the problem statement.
+ **/
+int main()
+{
+	// Initial input
+	int W; // width of the building.
+	int H; // height of the building.
+	cin >> W >> H; cin.ignore();
+	// cerr << "width: " << W << " height: " << H << endl;
+	int N; // maximum number of turns before game over.
+	cin >> N; cin.ignore();
+	int X0; // position of batman
+	int Y0; // position of batman
+	cin >> X0 >> Y0; cin.ignore();
+
+	// user variables
+	map<string, Direction> directionsMap = {
+		{"U",  U }, // up
+		{"UR", UR}, // up right
+		{"R",  R},  // right
+		{"DR", DR}, // down right
+		{"D",  D},  // down
+		{"DL", DL}, // down left
+		{"L",  L},  // left
+		{"UL", UL}  // up left
+	};
+
+	int minX = 0, minY = 0; // initial search area.
+	int maxX = W, maxY = H;
+	int jumpX = 0, jumpY = 0; // next place to jump
+
+	// game loop
+	while (1) {
+		string bomb_dir; // the direction of the bombs from batman's current location (U, UR, R, DR, D, DL, L or UL)
+		cin >> bomb_dir; cin.ignore();
+		// cerr << bomb_dir << endl;
+
+		int bomb_dirEnum = directionsMap.at(bomb_dir);
+
+		// cerr << X0 << " " << Y0 << "-->";
+
+		switch (bomb_dirEnum)
+		{
+			case U:
+				minX = maxX = X0;
+				maxY = Y0 - 1;
+				jumpY = ((maxY - minY) / 2) + minY;
+				Y0 = jumpY;
+				break;
+			case UR:
+				minX = X0 + 1;
+				maxY = Y0 - 1;
+				jumpX = ((maxX - minX) / 2) + minX;
+				jumpY = ((maxY - minY) / 2) + minY;
+				X0 = jumpX;
+				Y0 = jumpY;
+				break;
+			case R :
+				minY = maxY = X0;
+				minX = X0 + 1;
+				jumpX = ((maxX - minX) / 2) + minX;
+				X0 = jumpX;
+				break;
+			case DR:
+				minX = X0 + 1;
+				minY = Y0 + 1;
+				jumpX = ((maxX - minX) / 2) + minX;
+				jumpY = ((maxY - minY) / 2) + minY;
+				X0 = jumpX;
+				Y0 = jumpY;
+				break;
+			case D :
+				minX = maxX = X0;
+				minY = Y0 + 1;
+				jumpY = ((maxY - minY) / 2) + minY;
+				Y0 = jumpY;
+				break;
+			case DL:
+				maxX = X0 - 1;
+				minY = Y0 + 1;
+				jumpX = ((maxX - minX) / 2) + minX;
+				jumpY = ((maxY - minY) / 2) + minY;
+				X0 = jumpX;
+				Y0 = jumpY;
+				break;
+			case L :
+				minY = maxY = X0;
+				maxX = X0 - 1;
+				jumpX = ((maxX - minX) / 2) + minX;
+				X0 = jumpX;
+				break;
+			case UL:
+				maxX = X0 - 1;
+				maxY = Y0 - 1;
+				jumpX = ((maxX - minX) / 2) + minX;
+				jumpY = ((maxY - minY) / 2) + minY;
+				X0 = jumpX;
+				Y0 = jumpY;
+				break;
+		};
+
+		// Write an action using cout. DON'T FORGET THE "<< endl"
+		// To debug: cerr << "Debug messages..." << endl;
+		// cerr << jumpX << " " << jumpY << endl;
+
+		// the location of the next window Batman should jump to.
+		cout << jumpX << " " << jumpY << endl;
+	}
+}
